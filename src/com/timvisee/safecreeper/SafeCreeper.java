@@ -108,51 +108,11 @@ public class SafeCreeper extends JavaPlugin {
 	    setUpConfigManager();
 		
 		// Initialize the update checker
-		setUpUpdateChecker();
-		
-		// Remove all (old) update files
-		getUpdateChecker().removeUpdateFiles();
-		
-		// Check if any update exists
-		if(getConfig().getBoolean("updateChecker.enabled", true)) {
-			if(uc.isNewVersionAvailable()) {
-				final String newVer = uc.getNewestVersion();
-				System.out.println("[SafeCreeper] New Safe Creeper version available: v" + newVer);
-				
-				// Auto install updates if enabled
-				if(getConfig().getBoolean("updateChecker.autoInstallUpdates", true) || getUpdateChecker().isImportantUpdateAvailable()) {
-					if(!uc.isNewVersionCompatibleWithCurrentBukkit()) {
-						System.out.println("[SafeCreeper] The newest Safe Creeper version is not compatible with the current Bukkit version!");
-						System.out.println("[SafeCreeper] Please update to Bukkit " + uc.getRequiredBukkitVersion() + " or higher!");
-					} else {
-						// Check if already update installed
-						if(getUpdateChecker().isUpdateDownloaded())
-							System.out.println("[SafeCreeper] Safe Creeper update installed, server reload required!");
-						else {
-							// Download the update and show some status messages
-							System.out.println("[SafeCreeper] Automaticly installing SafeCreeper update...");
-							getUpdateChecker().downloadUpdate();
-							System.out.println("[SafeCreeper] Safe Creeper update installed, reload required!");
-						}
-					}
-				} else {
-					// Auto installing updates not enabled, show a status message
-					System.out.println("[SafeCreeper] Use '/sc installupdate' to automaticly install the new update!");
-				}
-			}
-		}
-		
+		// setUpUpdateChecker();
+
+
 		// Schedule update checker task
 		FileConfiguration config = getConfig();
-		if(config.getBoolean("tasks.updateChecker.enabled", true)) {
-			int taskInterval = (int) config.getDouble("tasks.updateChecker.interval", 3600) * 20;
-			
-			// Schedule the update checker task
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new SCUpdateCheckerTask(getConfig(), getUpdateChecker()), taskInterval, taskInterval);
-		} else {
-			// Show an warning in the console
-			getSCLogger().info("Scheduled task 'updateChecker' disabled in the config file!");
-		}
 		
 		// Update all existing config files if they aren't up-to-date
 		((SCFileUpdater) new SCFileUpdater()).updateFiles();
